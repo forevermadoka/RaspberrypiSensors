@@ -17,7 +17,8 @@ int main()
     uint8_t channel = 0;
     uint32_t options = OPTS_DEFAULT;
     double value;
-
+    File* temp_save;
+    char float_string_buffer[10]="";
     uint8_t low_chan = 0;
     uint8_t high_chan = 3;
 
@@ -73,7 +74,7 @@ int main()
         printf("     Channel %d", channel);
     }
     printf("\n");
-
+    temp_save=fopen("temp.dat","w");
     while (!enter_press())
     {
         // Display the updated samples per channel
@@ -84,6 +85,8 @@ int main()
             result = mcc118_a_in_read(address, channel, options, &value);
             STOP_ON_ERROR(result);
             printf("%12.5f V", value);
+            gvct(value,8,float_string_buffer);
+            fwrite(float_string_buffer,sizeof(float_string_buffer),1);
         }
 
         fflush(stdout);
